@@ -30,7 +30,7 @@ triHotSet = Fuzzy_Set.Trapezoid("hot", 70, 80, 90, 90)
 tempVar = Fuzzy_Variables.FuzzyVariables("temp", 50, 90, [triColdSet, triRoomSet, triHotSet])
 
 #create fis with variables and rules
-fis = Fuzzy_Inference_System.FuzzyInferenceSystem(tempRuleSet, [tempVar] )
+fis = Fuzzy_Inference_System.FuzzyInferenceSystem(tempRuleSet, [tempVar])
 
 tempDict = { "temp" : 62}
 
@@ -77,15 +77,15 @@ foodVar = Fuzzy_Variables.FuzzyVariables("food", 0, 10, [triGoodFoodSet, triMidF
 #serviceVar.draw("Tipping Problem (Service)", "Service Quality")
 
 #rulesets
-tempRuleSet = Fuzzy_Rule_Set.FuzzyRuleSet([ tempRuleGoodGreat,
-                                            tempRuleGoodAverage ,
-                                            tempRuleGoodGross ,
-                                            tempRuleMidGreat ,
-                                            tempRuleMidAverage  ,
-                                            tempRuleMidGross  ,
-                                            tempRuleBadGreat ,
-                                            tempRuleBadAverage  ,
-                                            tempRuleBadGross  ])
+tempRuleSet = Fuzzy_Rule_Set.FuzzyRuleSet([tempRuleGoodGreat,
+                                           tempRuleGoodAverage ,
+                                           tempRuleGoodGross ,
+                                           tempRuleMidGreat ,
+                                           tempRuleMidAverage  ,
+                                           tempRuleMidGross  ,
+                                           tempRuleBadGreat ,
+                                           tempRuleBadAverage  ,
+                                           tempRuleBadGross])
 #create fis variables and rules
 fis = Fuzzy_Inference_System.FuzzyInferenceSystem(tempRuleSet, [serviceVar, foodVar])
 

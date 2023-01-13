@@ -13,9 +13,8 @@ class TestController(KesslerController):
         """
         Method processed each time step by this controller.
         """
-
         thrust = 0
-        turn_rate = 50
+        turn_rate = 5000
         fire = True
 
         return thrust, turn_rate, fire

@@ -7,7 +7,7 @@ import time
 
 from kesslergame import Scenario, KesslerGame, GraphicsType
 from test_controller import TestController
-
+from bbfuzzylibrary.BB_controller import BBController
 
 my_test_scenario = Scenario(name='Test Scenario',
                             num_asteroids=10,
@@ -28,7 +28,7 @@ game = KesslerGame(settings=game_settings)  # Use this to visualize the game sce
 # game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
 
 pre = time.perf_counter()
-score, perf_data = game.run(scenario=my_test_scenario, controllers = [TestController(), TestController()])
+score, perf_data = game.run(scenario=my_test_scenario, controllers = [BBController(), TestController()])
 
 print('Scenario eval time: '+str(time.perf_counter()-pre))
 print(score.stop_reason)

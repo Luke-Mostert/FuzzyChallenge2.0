@@ -1,9 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import Fuzzy_Inference_System
-from Fuzzy_Inference_System import Fuzzy_Rule_Set
-from Fuzzy_Rule_Set import Fuzzy_Rules
-from Fuzzy_Inference_System import Fuzzy_Variables
 from Fuzzy_Variables import Fuzzy_Set
 import random
 
