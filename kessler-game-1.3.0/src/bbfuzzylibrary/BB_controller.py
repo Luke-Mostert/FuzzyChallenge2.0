@@ -42,15 +42,20 @@ class BBController(KesslerController):
         if cross < 0:
             targetRot = 360 - targetRot
 
-        print(str(targetRot) + " shipangle:" + str(shipRot)+ " asteroidpos:" + str(asteroidPos) + " dot:" + str(dot) + " cross:" + str(cross) + " length:" + str(length) + " xDis:"  + str(xDis) + " yDis:"  + str(yDis))
+        # + " shipangle:" + str(shipRot)+ " asteroidpos:" + str(asteroidPos) + " dot:" + str(dot) + " cross:" + str(cross) + " length:" + str(length) + " xDis:"  + str(xDis) + " yDis:"  + str(yDis))
         #targetRot = math.atan2((yDis / denom), (xDis / denom)) * (180/math.pi)
         #print(str(xDis) + " " + str(yDis) + " " + str(denom) + " " + str(targetRot))
-        #print(str(targetRot) + " " + str(asteroidPos))
+        #print(str(targetRot) + " " + str(asteroidPos))        if targetRot > 180:
+        targetRot = 360 - targetRot
 
-        if shipRot - targetRot < 180:
-            return [50, targetRot]
+        print(str(targetRot) + " TEST " + str(ship_state['heading']) + "TI" + str(shipPos) + " TESTY " + str(asteroidPos))
+
+
+
+        if targetRot - shipRot < 0:
+            return [-180, targetRot]
         else:
-            return [-50, targetRot]
+            return [180, targetRot]
 
     def FindClosestAsteroid(self, ship_state, game_state):
         closest = game_state['asteroids'][0]
