@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/kessler-game-1.3.0/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/kessler-game-1.3.0/src/bbfuzzylibrary" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/FuzzyChallenge2023/pythonProject/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>

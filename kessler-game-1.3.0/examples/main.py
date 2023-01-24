@@ -6,6 +6,7 @@ from Fuzzy_Rule_Set import Fuzzy_Rules
 from Fuzzy_Inference_System import Fuzzy_Variables
 from Fuzzy_Variables import Fuzzy_Set
 import Fuzzy_TSK_Learning
+from bbfuzzylibrary.BB_controller import BBController
 
 
 #This is how to create the full FIS and use the TSK eval with one antecedent
@@ -101,6 +102,17 @@ tippingDict = {
 #returnVal = fis.TSKEval(tippingDict)
 #print(returnVal)
 
-temp = Fuzzy_TSK_Learning.TSKLearning(50) #n
-temp.TSKLearn(100,np.sin) #epochs
+#temp = Fuzzy_TSK_Learning.TSKLearning(50) #n
+#temp.TSKLearn(100,np.sin) #epochs
+
+#read file test
+#testimport = Fuzzy_Rules.FuzzyRuleImport()
+#Fuzzy_Rules.ImportFile("test.txt")
+tempRulesDict = {
+    "speed" : ["slow", "intermediate", "fast"],
+    "position" : ["close", "midrange", "far"],
+    "angle" : ["small", "medium", "large"],
+    "size" : ["tiny", "average", "big"]
+}
+Fuzzy_Rules.CreateRule(tempRulesDict)
 

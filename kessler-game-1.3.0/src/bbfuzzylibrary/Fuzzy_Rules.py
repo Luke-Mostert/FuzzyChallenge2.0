@@ -1,3 +1,8 @@
+import random
+
+import numpy as np
+
+
 class FuzzyRules:
     def __init__(self, rule):
         self.rule = rule
@@ -40,4 +45,37 @@ class TSKFuzzyRules(FuzzyRules):
             elif temp[i] == "then":
                 self.output = int(temp[i + 1])
                 i += 1
+
+def ImportFile(fileName):
+    with open("../rulesets/" + fileName) as f:
+        lines = f.read().splitlines()
+    return lines
+
+#class FuzzyRuleExport:
+
+    #def __init__(self):
+        #pass
+
+
+
+def GetKey(dict, n=0):
+    if n < 0:
+        n += len(dict)
+    for i, key in enumerate(dict.keys()):
+        if i == n:
+            return key
+def CreateRule(ruleDict):
+    firstAntecedent = GetKey(ruleDict, 0)
+    secondAntecedent = GetKey(ruleDict, 1)
+    thirdAntecedent = GetKey(ruleDict, 2)
+    fourthAntecedent = GetKey(ruleDict, 3)
+    file = open("../rulesets/rules.txt", "w")
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                for l in range(3):
+                    file.write("If " + firstAntecedent + " is " + ruleDict[firstAntecedent][i]
+                               + " and " + secondAntecedent + " is " + ruleDict[secondAntecedent][j]
+                               + " and " + thirdAntecedent + " is " + ruleDict[thirdAntecedent][k]
+                               + " and " + fourthAntecedent + " is " + ruleDict[fourthAntecedent][l] + " then .\n")
 
