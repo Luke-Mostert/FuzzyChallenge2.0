@@ -43,13 +43,16 @@ class TSKFuzzyRules(FuzzyRules):
                 self.antecedents.append(temp[i + 1])
                 i += 1
             elif temp[i] == "then":
-                self.output = int(temp[i + 1])
+                self.output = float(temp[i + 1])
                 i += 1
 
 def ImportFile(fileName):
+    ruleset = []
     with open("../rulesets/" + fileName) as f:
         lines = f.read().splitlines()
-    return lines
+    for i in range(len(lines)):
+        ruleset.append(TSKFuzzyRules(lines[i]))
+    return ruleset
 
 #class FuzzyRuleExport:
 

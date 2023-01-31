@@ -86,7 +86,7 @@ class Singleton(FuzzySet):
 
     def calcMembership(self, x):
         if x == self.a:
-            return x
+            return 1
         else:
             return 0
 

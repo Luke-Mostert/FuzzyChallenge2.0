@@ -33,7 +33,7 @@ class Asteroid:
         else:
             self.size = 4
 
-        # Set max speed based off of scaling factor
+        # Set max speed based off of scaling factor2
         speed_scaler = 2.0 + (4.0 - self.size) / 4.0
         self.max_speed = 60.0 * speed_scaler
 
