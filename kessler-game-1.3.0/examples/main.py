@@ -5,6 +5,7 @@ from Fuzzy_Inference_System import Fuzzy_Rule_Set
 from Fuzzy_Rule_Set import Fuzzy_Rules
 from Fuzzy_Inference_System import Fuzzy_Variables
 from Fuzzy_Variables import Fuzzy_Set
+import Fuzzy_Create_FIS
 from kesslergame import Scenario, KesslerGame, GraphicsType
 
 import Fuzzy_TSK_Learning
@@ -110,7 +111,7 @@ tippingDict = {
 #read file test
 #testimport = Fuzzy_Rules.FuzzyRuleImport()
 #Creating ruleset from file
-rules = Fuzzy_Rules.ImportFile("rules.txt")
+rules = Fuzzy_Rules.ImportFile("asteroidrules.txt")
 asteroid_ruleset = Fuzzy_Rule_Set.FuzzyRuleSet(rules)
 #rule_set.PrintRules()
 
@@ -143,7 +144,7 @@ positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 800, [positionFarSet
 angleVar = Fuzzy_Variables.FuzzyVariables("angle", 0, 180, [angleLargeSet, angleMediumSet, angleSmallSet])
 sizeVar = Fuzzy_Variables.FuzzyVariables("size", 1, 4, [sizeBigSet, sizeAverageSet, sizeTinySet])
 
-asteroid_fis = Fuzzy_Inference_System.FuzzyInferenceSystem(asteroid_ruleset, [speedVar, positionVar, angleVar, sizeVar])
+asteroid_fis = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
 
 asteroidDict = {
     "speed" : 5,

@@ -25,8 +25,8 @@ class FuzzyInferenceSystem:
         # Columns are equal to number of sets in variables to the power of antecedents in the rules.
         rows = len(inputs)
         cols = len(self.variables[0].sets) ** len(self.ruleset.rules[0].antecedents)
-        numer = [ [0] * cols for _ in range(rows)]
-        denom = [ [0] * cols for _ in range(rows)]
+        numer = [[0] * cols for _ in range(rows)]
+        denom = [[0] * cols for _ in range(rows)]
         #Check if the values are in range of the variables
         for b in range(len(inputs)):
             for a in range(len(self.variables)):

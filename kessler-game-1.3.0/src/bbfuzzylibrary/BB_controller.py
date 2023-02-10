@@ -5,7 +5,10 @@
 
 from kesslergame import KesslerController
 from typing import Dict, Tuple
+from bbfuzzylibrary import Fuzzy_Create_FIS
 import math
+
+asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
 
 class BBController(KesslerController):
 
@@ -27,7 +30,7 @@ class BBController(KesslerController):
         return "BBController"
 
     def FindRotation(self, ship_state, game_state) -> (int, float):
-        asteroid = self.FindClosestAsteroid(ship_state, game_state)
+        asteroid = self.FindHighestThreat(ship_state, game_state)
         shipPos = ship_state['position']
         shipRot = ship_state['heading']
         asteroidPos = asteroid['position']
@@ -48,7 +51,7 @@ class BBController(KesslerController):
         #print(str(targetRot) + " " + str(asteroidPos))        if targetRot > 180:
         targetRot = 360 - targetRot
 
-        print(str(targetRot) + " TEST " + str(ship_state['heading']) + "TI" + str(shipPos) + " TESTY " + str(asteroidPos))
+        #print(str(targetRot) + " TEST " + str(ship_state['heading']) + "TI" + str(shipPos) + " TESTY " + str(asteroidPos))
 
 
 
@@ -75,3 +78,28 @@ class BBController(KesslerController):
         x = (shipPos[0] - asteroidPos[0]) * (shipPos[0] - asteroidPos[0])
         y = (shipPos[1] - asteroidPos[1]) * (shipPos[1] - asteroidPos[1])
         return math.sqrt(x + y)
+
+    def FindHighestThreat(self, ship_state, game_state):
+        highest = game_state['asteroids'][0]
+        highestThreat = -1
+        asteroidDict = {
+            "speed": 0,
+            "position": 0,
+            "angle": 0,
+            "size": 0
+        }
+
+        for asteroid in game_state['asteroids']:
+            dist = self.FindDist(ship_state['position'], asteroid['position'])
+            #need to change the asteroids velo into its speed
+            asteroidDict["speed"] = math.sqrt(asteroid['velocity'][0] * asteroid['velocity'][0] + asteroid['velocity'][1] * asteroid['velocity'][1])
+            asteroidDict["position"] = dist
+            #need to find angle somehow shipcoords - asteroidcoords
+            asteroidDict["angle"] = 1
+            asteroidDict["size"] = asteroid['size']
+            threat = asteroidFIS.TSKEval(asteroidDict)
+            if(threat > highestThreat):
+                highest = asteroid
+                highestThreat = threat
+
+        return highest

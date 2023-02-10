@@ -46,6 +46,7 @@ class TSKFuzzyRules(FuzzyRules):
                 self.output = float(temp[i + 1])
                 i += 1
 
+
 def ImportFile(fileName):
     ruleset = []
     with open("../rulesets/" + fileName) as f:
@@ -60,13 +61,14 @@ def ImportFile(fileName):
         #pass
 
 
-
 def GetKey(dict, n=0):
     if n < 0:
         n += len(dict)
     for i, key in enumerate(dict.keys()):
         if i == n:
             return key
+
+
 def CreateRule(ruleDict):
     firstAntecedent = GetKey(ruleDict, 0)
     secondAntecedent = GetKey(ruleDict, 1)
