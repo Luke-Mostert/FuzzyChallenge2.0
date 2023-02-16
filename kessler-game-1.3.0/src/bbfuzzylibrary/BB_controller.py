@@ -7,6 +7,7 @@ from kesslergame import KesslerController
 from typing import Dict, Tuple
 from bbfuzzylibrary import Fuzzy_Create_FIS
 import math
+import numpy as np
 
 asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
 
@@ -18,8 +19,10 @@ class BBController(KesslerController):
         """
         thrust = 0
         turn_rate, targetRot = self.FindRotation(ship_state, game_state)
-        if math.isclose(targetRot, ship_state['heading'], abs_tol=5):
+        if math.isclose(targetRot, ship_state['heading'], abs_tol=3):
             fire = True
+            #trying to fix stutter
+            turn_rate = 0
         else:
             fire = False
 
@@ -36,24 +39,18 @@ class BBController(KesslerController):
         asteroidPos = asteroid['position']
         xDis = asteroidPos[0] - shipPos[0]
         yDis = asteroidPos[1] - shipPos[1]
-        denom = math.sqrt((xDis * xDis) + (yDis * yDis))
 
         dot = (xDis * 1) + (yDis * 0)
         length = math.sqrt((xDis * xDis) + (yDis * yDis))
         cross = ((xDis * 0) - (yDis * 1))
         targetRot = math.acos(dot / (length * 1)) * (180/math.pi)
+        #what is this for, fixes incorrect rotation but breaks targeting
         if cross < 0:
             targetRot = 360 - targetRot
 
-        # + " shipangle:" + str(shipRot)+ " asteroidpos:" + str(asteroidPos) + " dot:" + str(dot) + " cross:" + str(cross) + " length:" + str(length) + " xDis:"  + str(xDis) + " yDis:"  + str(yDis))
-        #targetRot = math.atan2((yDis / denom), (xDis / denom)) * (180/math.pi)
-        #print(str(xDis) + " " + str(yDis) + " " + str(denom) + " " + str(targetRot))
-        #print(str(targetRot) + " " + str(asteroidPos))        if targetRot > 180:
         targetRot = 360 - targetRot
 
         #print(str(targetRot) + " TEST " + str(ship_state['heading']) + "TI" + str(shipPos) + " TESTY " + str(asteroidPos))
-
-
 
         if targetRot - shipRot < 0:
             return [-180, targetRot]
@@ -86,18 +83,30 @@ class BBController(KesslerController):
             "speed": 0,
             "position": 0,
             "angle": 0,
-            "size": 0
         }
 
         for asteroid in game_state['asteroids']:
             dist = self.FindDist(ship_state['position'], asteroid['position'])
+            speed = math.sqrt(asteroid['velocity'][0] * asteroid['velocity'][0] + asteroid['velocity'][1] * asteroid['velocity'][1])
+            coordsx = ship_state['position'][0] - asteroid['position'][0]
+            coordsy = ship_state['position'][1] - asteroid['position'][1]
+            coords = [coordsx, coordsy]
+            magcoords = math.sqrt(coords[0] * coords[0] + coords[1] * coords[1])
             #need to change the asteroids velo into its speed
-            asteroidDict["speed"] = math.sqrt(asteroid['velocity'][0] * asteroid['velocity'][0] + asteroid['velocity'][1] * asteroid['velocity'][1])
+            asteroidDict["speed"] = speed
             asteroidDict["position"] = dist
             #need to find angle somehow shipcoords - asteroidcoords
-            asteroidDict["angle"] = 1
-            asteroidDict["size"] = asteroid['size']
+            asteroidDict["angle"] = math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi)
+            print(math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi))
             threat = asteroidFIS.TSKEval(asteroidDict)
+            if asteroid['size'] == 4:
+                threat += .1
+            elif asteroid['size'] == 3:
+                threat += .075
+            elif asteroid['size'] == 2:
+                threat += .05
+            else:
+                threat += .025
             if(threat > highestThreat):
                 highest = asteroid
                 highestThreat = threat

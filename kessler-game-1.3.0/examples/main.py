@@ -134,15 +134,10 @@ angleLargeSet = Fuzzy_Set.Triangle("large", 30, 38.5, 181)
 angleMediumSet = Fuzzy_Set.Triangle("medium", 22.5, 30, 38.5)
 angleSmallSet = Fuzzy_Set.Trapezoid("small", 0, 0, 22.5, 30)
 
-#size
-sizeBigSet = Fuzzy_Set.Singleton("big", 4)
-sizeAverageSet = Fuzzy_Set.Trapezoid("average", 2,2,3,3)
-sizeTinySet = Fuzzy_Set.Singleton("tiny", 1)
-
 speedVar = Fuzzy_Variables.FuzzyVariables("speed", 0, 165, [speedFastSet, speedIntermediateSet, speedSlowSet])
 positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 800, [positionFarSet, positionMidrangeSet, positionCloseSet])
 angleVar = Fuzzy_Variables.FuzzyVariables("angle", 0, 180, [angleLargeSet, angleMediumSet, angleSmallSet])
-sizeVar = Fuzzy_Variables.FuzzyVariables("size", 1, 4, [sizeBigSet, sizeAverageSet, sizeTinySet])
+
 
 asteroid_fis = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
 
@@ -150,19 +145,17 @@ asteroidDict = {
     "speed" : 5,
     "position" : 155,
     "angle" : 15,
-    "size" : 2.5
 }
 
 returnVal = asteroid_fis.TSKEval(asteroidDict)
 print(returnVal)
 
 #Template to create template for rules
-#tempRulesDict = {
-#    "speed" : ["slow", "intermediate", "fast"],
-#    "position" : ["close", "midrange", "far"],
-#    "angle" : ["small", "medium", "large"],
-#    "size" : ["tiny", "average", "big"]
-#}
-#Fuzzy_Rules.CreateRule(tempRulesDict)
+tempRulesDict = {
+    "speed" : ["slow", "intermediate", "fast"],
+    "position" : ["close", "midrange", "far"],
+    "angle" : ["small", "medium", "large"],
+}
+Fuzzy_Rules.CreateRule(tempRulesDict)
 
 

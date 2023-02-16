@@ -73,14 +73,11 @@ def CreateRule(ruleDict):
     firstAntecedent = GetKey(ruleDict, 0)
     secondAntecedent = GetKey(ruleDict, 1)
     thirdAntecedent = GetKey(ruleDict, 2)
-    fourthAntecedent = GetKey(ruleDict, 3)
     file = open("../rulesets/rules.txt", "w")
     for i in range(3):
         for j in range(3):
             for k in range(3):
-                for l in range(3):
                     file.write("If " + firstAntecedent + " is " + ruleDict[firstAntecedent][i]
                                + " and " + secondAntecedent + " is " + ruleDict[secondAntecedent][j]
-                               + " and " + thirdAntecedent + " is " + ruleDict[thirdAntecedent][k]
-                               + " and " + fourthAntecedent + " is " + ruleDict[fourthAntecedent][l] + " then .\n")
+                               + " and " + thirdAntecedent + " is " + ruleDict[thirdAntecedent][k] + " then .\n")
 
