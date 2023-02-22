@@ -1,0 +1,4 @@
+If position is far and threat is high then .5
+If position is far and threat is low then 0
+If position is close and threat is high then 1
+If position is close and threat is low then .5

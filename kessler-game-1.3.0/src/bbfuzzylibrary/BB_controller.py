@@ -10,6 +10,8 @@ import math
 import numpy as np
 
 asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
+actionFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("actionrules.txt")
+
 
 class BBController(KesslerController):
 
@@ -22,7 +24,7 @@ class BBController(KesslerController):
         if math.isclose(targetRot, ship_state['heading'], abs_tol=3):
             fire = True
             #trying to fix stutter
-            turn_rate = 0
+            #turn_rate = 0
         else:
             fire = False
 
@@ -36,6 +38,8 @@ class BBController(KesslerController):
         asteroid = self.FindHighestThreat(ship_state, game_state)
         shipPos = ship_state['position']
         shipRot = ship_state['heading']
+        #increase the pos by timestep * velocity
+        #timestep = how long takes projectile to get there dist/speed
         asteroidPos = asteroid['position']
         xDis = asteroidPos[0] - shipPos[0]
         yDis = asteroidPos[1] - shipPos[1]
@@ -50,12 +54,16 @@ class BBController(KesslerController):
 
         targetRot = 360 - targetRot
 
-        #print(str(targetRot) + " TEST " + str(ship_state['heading']) + "TI" + str(shipPos) + " TESTY " + str(asteroidPos))
-
         if targetRot - shipRot < 0:
-            return [-180, targetRot]
+            if targetRot - shipRot < -5:
+                return[-120, targetRot]
+            else:
+                return[-70, targetRot]
         else:
-            return [180, targetRot]
+            if targetRot - shipRot > 5:
+                return [120, targetRot]
+            else:
+                return [70, targetRot]
 
     def FindClosestAsteroid(self, ship_state, game_state):
         closest = game_state['asteroids'][0]
@@ -71,14 +79,16 @@ class BBController(KesslerController):
 
         return closest
 
-    def FindDist(self,shipPos, asteroidPos) -> float:
+    def FindDist(self, shipPos, asteroidPos) -> float:
         x = (shipPos[0] - asteroidPos[0]) * (shipPos[0] - asteroidPos[0])
         y = (shipPos[1] - asteroidPos[1]) * (shipPos[1] - asteroidPos[1])
         return math.sqrt(x + y)
 
     def FindHighestThreat(self, ship_state, game_state):
         highest = game_state['asteroids'][0]
+        secondary = game_state['asteroids'][0]
         highestThreat = -1
+        closestDist = 10000
         asteroidDict = {
             "speed": 0,
             "position": 0,
@@ -87,28 +97,39 @@ class BBController(KesslerController):
 
         for asteroid in game_state['asteroids']:
             dist = self.FindDist(ship_state['position'], asteroid['position'])
-            speed = math.sqrt(asteroid['velocity'][0] * asteroid['velocity'][0] + asteroid['velocity'][1] * asteroid['velocity'][1])
-            coordsx = ship_state['position'][0] - asteroid['position'][0]
-            coordsy = ship_state['position'][1] - asteroid['position'][1]
-            coords = [coordsx, coordsy]
-            magcoords = math.sqrt(coords[0] * coords[0] + coords[1] * coords[1])
-            #need to change the asteroids velo into its speed
-            asteroidDict["speed"] = speed
-            asteroidDict["position"] = dist
-            #need to find angle somehow shipcoords - asteroidcoords
-            asteroidDict["angle"] = math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi)
-            print(math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi))
-            threat = asteroidFIS.TSKEval(asteroidDict)
-            if asteroid['size'] == 4:
-                threat += .1
-            elif asteroid['size'] == 3:
-                threat += .075
-            elif asteroid['size'] == 2:
-                threat += .05
-            else:
-                threat += .025
-            if(threat > highestThreat):
-                highest = asteroid
-                highestThreat = threat
-
+            if dist < closestDist:
+                closestDist = dist
+                secondary = asteroid
+            if dist < 300:
+                speed = math.sqrt(asteroid['velocity'][0] * asteroid['velocity'][0] + asteroid['velocity'][1] * asteroid['velocity'][1])
+                coordsx = ship_state['position'][0] - asteroid['position'][0]
+                coordsy = ship_state['position'][1] - asteroid['position'][1]
+                coords = [coordsx, coordsy]
+                magcoords = math.sqrt(coords[0] * coords[0] + coords[1] * coords[1])
+                #need to change the asteroids velo into its speed
+                asteroidDict["speed"] = speed
+                asteroidDict["position"] = dist
+                #need to find angle somehow shipcoords - asteroidcoords
+                asteroidDict["angle"] = math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi)
+                threat = asteroidFIS.TSKEval(asteroidDict)
+                if asteroid['size'] == 4:
+                    threat += .1
+                elif asteroid['size'] == 3:
+                    threat += .075
+                elif asteroid['size'] == 2:
+                    threat += .05
+                else:
+                    threat += .025
+                if(threat > highestThreat):
+                    highest = asteroid
+                    highestThreat = threat
+        if highestThreat == -1:
+            return secondary
         return highest
+
+    def DecideAction(self, ship_state, game_state):
+        #why need inference if we can just check how close and move accordingly
+        actionDict = {
+            "position": 0,
+            "threat": 0,
+        }
