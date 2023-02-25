@@ -57,6 +57,7 @@ class FuzzyInferenceSystem:
         numerReturn = 0
         denomReturn = 0
         #print(numer)
+        #print(denom)
         for i in range(cols):
             numerTemp = 1
             denomTemp = 1

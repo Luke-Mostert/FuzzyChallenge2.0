@@ -40,7 +40,7 @@ def CreateAsteroidFIS(filename):
     return asteroid_fis
 
 
-def ActionFIS(filename):
+def CreateActionFIS(filename):
     rules = Fuzzy_Rules.ImportFile(filename)
     threat_ruleset = Fuzzy_Rule_Set.FuzzyRuleSet(rules)
     # position
@@ -48,8 +48,8 @@ def ActionFIS(filename):
     positionCloseSet = Fuzzy_Set.Trapezoid("close", 0, 0, 100, 200)
 
     #threat
-    threatHighSet = Fuzzy_Set.Trapezoid("high", .85, .9, 1, 1)
-    ThreatLowSet = Fuzzy_Set.Trapezoid("low", 0, 0, .8, .85)
+    threatHighSet = Fuzzy_Set.Trapezoid("high", 0.8, 0.85, 1, 1)
+    ThreatLowSet = Fuzzy_Set.Trapezoid("low", 0, 0, 0.8, 0.85)
 
     positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 800,
                                                  [positionFarSet, positionCloseSet])
