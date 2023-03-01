@@ -44,7 +44,7 @@ def CreateActionFIS(filename):
     rules = Fuzzy_Rules.ImportFile(filename)
     threat_ruleset = Fuzzy_Rule_Set.FuzzyRuleSet(rules)
     # position
-    positionFarSet = Fuzzy_Set.Trapezoid("far", 100, 200, 800, 800)
+    positionFarSet = Fuzzy_Set.Trapezoid("far", 100, 200, 800, 1000)
     positionCloseSet = Fuzzy_Set.Trapezoid("close", 0, 0, 100, 200)
 
     #threat

@@ -21,27 +21,32 @@ class BBController(KesslerController):
         """
         thrust = 0
         retDict = self.DecideAction(ship_state, game_state)
-        print(retDict)
+        #print(retDict)
         if retDict["action"] == 0:
+            thrust = 0
             if math.isclose(retDict["targetRot"], ship_state['heading'], abs_tol=3):
                 fire = True
             else:
                 fire = False
         else:
-            pass
+            fire = False
+            if math.isclose(retDict["targetRot"], ship_state['heading'], abs_tol=5):
+                thrust = retDict["thrust"]
+            else:
+                thrust = 0
 
-        return retDict["thrust"], retDict["turn_rate"], fire
+        return thrust, retDict["turn_rate"], fire
 
     @property
     def name(self) -> str:
         return "BBController"
 
-    def FindRotation(self, ship_state, asteroid) -> (int, float):
+    def FindShootingRotation(self,ship_state, asteroid):
         shipPos = ship_state['position']
         shipRot = ship_state['heading']
-        #increase the pos by timestep * velocity
+        # increase the pos by timestep * velocity
 
-        #timestep = how long takes projectile to get there dist/speed
+        # timestep = how long takes projectile to get there dist/speed
         asteroidPos = asteroid['position']
 
         asteroidVel = asteroid['velocity']
@@ -53,6 +58,14 @@ class BBController(KesslerController):
 
         xDis = newXPos - shipPos[0]
         yDis = newYPos - shipPos[1]
+
+        return self.FindRotation(ship_state, (xDis, yDis))
+
+    def FindRotation(self, ship_state, tarPosition):
+
+        xDis = tarPosition[0]
+        yDis = tarPosition[1]
+        shipRot = ship_state['heading']
 
         dot = (xDis * 1) + (yDis * 0)
         length = math.sqrt((xDis * xDis) + (yDis * yDis))
@@ -95,22 +108,13 @@ class BBController(KesslerController):
         return math.sqrt(x + y)
 
     def FindHighestThreat(self, ship_state, asteroid):
-        #highest = game_state['asteroids'][0]
-        #secondary = game_state['asteroids'][0]
-        #highestThreat = -1
-        #closestDist = 10000
         asteroidDict = {
             "speed": 0,
             "position": 0,
             "angle": 0,
         }
 
-        #for asteroid in game_state['asteroids']:
         dist = self.FindDist(ship_state['position'], asteroid['position'])
-        #    if dist < closestDist:
-        #        closestDist = dist
-        #        secondary = asteroid
-        #    if dist < 300:
         speed = math.sqrt(asteroid['velocity'][0] * asteroid['velocity'][0] + asteroid['velocity'][1] * asteroid['velocity'][1])
         coordsx = ship_state['position'][0] - asteroid['position'][0]
         coordsy = ship_state['position'][1] - asteroid['position'][1]
@@ -130,19 +134,48 @@ class BBController(KesslerController):
             threat += .05
         else:
             threat += .025
-        #if(threat > highestThreat):
-        #    highest = asteroid
-        #    highestThreat = threat
-        #if highestThreat == -1:
-        #    return secondary
         return threat
 
     def Avoidance(self, ship, asteroid):
-        turn_rate, targetRot = self.FindRotation(ship, asteroid)
-        return
+        asteroidPos = asteroid['position']
+        asteroidVel = asteroid['velocity']
+        shipPos = ship['position']
+
+        perpVecX = asteroidVel[0]
+        perpVecY = asteroidVel[1]
+        #Greater than zero means left side
+        if ((asteroidPos[0]) * (shipPos[1]) - (asteroidPos[1]) * (shipPos[0])) > 0:
+            if(asteroidPos[0] <= shipPos[0] and asteroidPos[1] >= shipPos[1]):
+                perpVecX *= -1
+            elif(asteroidPos[0] >= shipPos[0] and asteroidPos[1] <= shipPos[1]):
+                perpVecX *= -1
+            elif(asteroidPos[0] <= shipPos[0] and asteroidPos[1] <= shipPos[1]):
+                perpVecX *= -1
+            elif(asteroidPos[0] >= shipPos[0] and asteroidPos[1] >= shipPos[1]):
+                perpVecX *= -1
+        # Greater than zero means go right
+        else:
+            if(asteroidPos[0] < shipPos[0] and asteroidPos[1] > shipPos[1]):
+                perpVecY *= -1
+            elif(asteroidPos[0] > shipPos[0] and asteroidPos[1] < shipPos[1]):
+                perpVecY *= -1
+            elif(asteroidPos[0] > shipPos[0] and asteroidPos[1] > shipPos[1]):
+                perpVecY *= -1
+            elif(asteroidPos[0] < shipPos[0] and asteroidPos[1] < shipPos[1]):
+                perpVecY *= -1
+
+
+        xTemp = perpVecX
+        perpVecX = perpVecY
+        perpVecY = xTemp
+
+        print(str(asteroid["position"]) + " VEL " + str(asteroid["velocity"]) + " PERP " + str((perpVecX, perpVecY)))
+
+        turn_rate, targetRot = self.FindRotation(ship, (perpVecX, perpVecY))
+        return turn_rate, targetRot, 120
 
     def Shooting(self, ship, asteroid):
-        turn_rate, targetRot = self.FindRotation(ship, asteroid)
+        turn_rate, targetRot = self.FindShootingRotation(ship, asteroid)
         return turn_rate, targetRot
 
     def DecideAction(self, ship_state, game_state):
@@ -170,35 +203,32 @@ class BBController(KesslerController):
                     highestThreat = threat
             else:
                 threat = 0.2
-                #uncomment so it doesnt always shoot
-            #actionDict["position"] = dist
-            #actionDict["threat"] = threat
-#
-            #avoidThreat = actionFIS.TSKEval(actionDict)
-            #if avoidThreat > highestAvoidThreat:
-            #    highestAvoid = asteroid
-            #    highestAvoidThreat = avoidThreat
+            actionDict["position"] = dist
+            actionDict["threat"] = threat
+
+            avoidThreat = actionFIS.TSKEval(actionDict)
+            if avoidThreat > highestAvoidThreat:
+                highestAvoid = asteroid
+                highestAvoidThreat = avoidThreat
 
 
         if highestThreat == -1:
             highestShoot = secondary
-#
+
         retDict = {
             "action": 0,
             "targetRot": 0,
             "turn_rate": 0,
             "thrust": 0
         }
-
-        if highestAvoidThreat > 0.5:
-            print("avoid")
+#highestAvoidThreat > 0.5
+        if True:
             turn_rate, targetRot, thrust = self.Avoidance(ship_state, highestAvoid)
             retDict["action"] = 1
             retDict["targetRot"] = targetRot
             retDict["turn_rate"] = turn_rate
             retDict["thrust"] = thrust
         else:
-            print("shoot")
             turn_rate, targetRot = self.Shooting(ship_state, highestAvoid)
             retDict["action"] = 0
             retDict["targetRot"] = targetRot
