@@ -6,6 +6,7 @@ from Fuzzy_Rule_Set import Fuzzy_Rules
 from Fuzzy_Inference_System import Fuzzy_Variables
 from Fuzzy_Variables import Fuzzy_Set
 import Fuzzy_Create_FIS
+import re
 from kesslergame import Scenario, KesslerGame, GraphicsType
 
 import Fuzzy_TSK_Learning
@@ -147,8 +148,8 @@ asteroidDict = {
     "angle" : 15,
 }
 
-returnVal = asteroid_fis.TSKEval(asteroidDict)
-print(returnVal)
+#returnVal = asteroid_fis.TSKEval(asteroidDict)
+#print(returnVal)
 
 #Template to create template for rules
 tempRulesDict = {
@@ -156,6 +157,15 @@ tempRulesDict = {
     "position" : ["close", "midrange", "far"],
     "angle" : ["small", "medium", "large"],
 }
-Fuzzy_Rules.CreateRule(tempRulesDict)
+#Fuzzy_Rules.CreateRule(tempRulesDict)
 
+
+
+s1 =  'If position is far and threat is high then .5'
+result = re.sub("\.\d+", '.9', s1)
+print(result)
+
+#s1 = 'If position is far and threat is high then .5'
+#s1.replace(r'[.]', '.555')
+#print(s1)
 

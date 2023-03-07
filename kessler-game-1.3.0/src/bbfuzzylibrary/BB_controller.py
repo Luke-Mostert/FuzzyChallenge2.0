@@ -2,16 +2,15 @@
 # Copyright © 2022 Thales. All Rights Reserved.
 # NOTICE: This file is subject to the license agreement defined in file 'LICENSE', which is part of
 # this source code package.
-
+import kesslergame.kessler_game
 from kesslergame import KesslerController
 from typing import Dict, Tuple
-from bbfuzzylibrary import Fuzzy_Create_FIS
+from bbfuzzylibrary import Fuzzy_Create_FIS, Training, Fuzzy_Rules
 import math
 import numpy as np
 
 asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
 actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules.txt")
-
 
 class BBController(KesslerController):
 
@@ -22,6 +21,11 @@ class BBController(KesslerController):
         thrust = 0
         retDict = self.DecideAction(ship_state, game_state)
         #print(retDict)
+        oVector = Training.OutputVector([asteroidFIS, actionFIS])
+        asteroidFIS.ruleset.UpdateOutput(oVector[0:27])
+        actionFIS.ruleset.UpdateOutput(oVector[27:32])
+        Fuzzy_Rules.FuzzyRuleExport("actionrules.txt", actionFIS.ruleset)
+
         if retDict["action"] == 0:
             thrust = 0
             if math.isclose(retDict["targetRot"], ship_state['heading'], abs_tol=3):
@@ -41,7 +45,7 @@ class BBController(KesslerController):
     def name(self) -> str:
         return "BBController"
 
-    def FindShootingRotation(self,ship_state, asteroid):
+    def FindShootingRotation(self, ship_state, asteroid):
         shipPos = ship_state['position']
         shipRot = ship_state['heading']
         # increase the pos by timestep * velocity
@@ -169,7 +173,7 @@ class BBController(KesslerController):
         perpVecX = perpVecY
         perpVecY = xTemp
 
-        print(str(asteroid["position"]) + " VEL " + str(asteroid["velocity"]) + " PERP " + str((perpVecX, perpVecY)))
+        #print(str(asteroid["position"]) + " VEL " + str(asteroid["velocity"]) + " PERP " + str((perpVecX, perpVecY)))
 
         turn_rate, targetRot = self.FindRotation(ship, (perpVecX, perpVecY))
         return turn_rate, targetRot, 120
@@ -222,7 +226,7 @@ class BBController(KesslerController):
             "thrust": 0
         }
 #highestAvoidThreat > 0.5
-        if True:
+        if highestAvoidThreat > 0.5:
             turn_rate, targetRot, thrust = self.Avoidance(ship_state, highestAvoid)
             retDict["action"] = 1
             retDict["targetRot"] = targetRot

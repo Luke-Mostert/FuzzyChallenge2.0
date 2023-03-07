@@ -5,7 +5,7 @@
 
 import time
 
-from kesslergame import Scenario, KesslerGame, GraphicsType
+from kesslergame import Scenario, KesslerGame, GraphicsType, TrainerEnvironment
 from test_controller import TestController
 from bbfuzzylibrary.BB_controller import BBController
 
@@ -25,6 +25,7 @@ game_settings = {'perf_tracker': True,
                  'graphics_mode': GraphicsType.Tkinter,
                  'realtime_multiplier': 1}
 game = KesslerGame(settings=game_settings)  # Use this to visualize the game scenario
+game = TrainerEnvironment()  # Use this for training settings
 # game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
 
 pre = time.perf_counter()

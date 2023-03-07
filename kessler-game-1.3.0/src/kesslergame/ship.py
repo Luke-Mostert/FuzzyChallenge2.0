@@ -8,6 +8,7 @@ import numpy as np
 from typing import Dict, Any, List
 
 from .bullet import Bullet
+from bbfuzzylibrary import Training
 
 
 class Ship:
@@ -190,6 +191,11 @@ class Ship:
             spawn_position = self.position
             spawn_heading = self.heading
             self.respawn(spawn_position, spawn_heading)
+        else:
+            if self.team == 1:
+                Training.reward -= 100
+                print(Training.reward)
+
 
     def respawn(self, position: List[float], heading: float = 90.0) -> None:
         """

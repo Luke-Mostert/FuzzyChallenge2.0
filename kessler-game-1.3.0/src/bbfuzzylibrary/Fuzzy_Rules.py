@@ -47,18 +47,20 @@ class TSKFuzzyRules(FuzzyRules):
                 i += 1
 
 
-def ImportFile(fileName):
+def ImportFile(filename):
     ruleset = []
-    with open("../rulesets/" + fileName) as f:
+    with open("../rulesets/" + filename) as f:
         lines = f.read().splitlines()
     for i in range(len(lines)):
         ruleset.append(TSKFuzzyRules(lines[i]))
     return ruleset
 
-#class FuzzyRuleExport:
 
-    #def __init__(self):
-        #pass
+def FuzzyRuleExport(filename, ruleset):
+    with open("../rulesets/" + filename, 'w') as f:
+        for i in range(len(ruleset.rules)):
+            f.writelines(ruleset.rules[i].rule + '\n')
+
 
 
 def GetKey(dict, n=0):

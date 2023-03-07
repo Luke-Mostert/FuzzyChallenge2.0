@@ -15,6 +15,7 @@ from .score import Score
 from .controller import KesslerController
 from .collisions import circle_line_collision
 from .graphics import GraphicsType, GraphicsHandler
+from bbfuzzylibrary import Training
 
 
 class StopReason(Enum):
@@ -52,7 +53,7 @@ class KesslerGame:
         """
         Run an entire scenario from start to finish and return score and stop reason
         """
-
+        global reward
         ##################
         # INITIALIZATION #
         ##################
@@ -182,6 +183,7 @@ class KesslerGame:
                         if dist < (ship.radius + asteroid.radius):
                             # Ship destruct function. Add one to asteroids_hit
                             ship.asteroids_hit += 1
+                            Training.reward += 1
                             ship.destruct(map_size=scenario.map_size)
                             # Asteroid destruct function and mark for removal
                             asteroids.extend(asteroid.destruct(impactor=ship))
@@ -202,6 +204,7 @@ class KesslerGame:
                         # Increment hit values on ship that fired bullet then destruct bullet and mark for removal
                         bullet.owner.asteroids_hit += 1
                         bullet.owner.bullets_hit += 1
+                        Training.reward += 1
                         bullet.destruct()
                         bullet_remove_idxs.append(idx_bul)
                         # Asteroid destruct function and mark for removal
@@ -299,11 +302,12 @@ class TrainerEnvironment(KesslerGame):
         if settings is None:
             settings = {}
         trainer_settings = {
-            'frequency': settings.get("frequency", 30.0),
+            'frequency': settings.get("frequency", 100.0),
             'perf_tracker': settings.get("perf_tracker", False),
             'prints_on': settings.get("prints_on", False),
             'graphics_type': GraphicsType.NoGraphics,
-            'realtime_multiplier': 0,
-            'time_limit': settings.get("time_limit", None)
+            'realtime_multiplier': 5,
+            'time_limit': settings.get("time_limit", 10)
         }
         super().__init__(trainer_settings)
+
