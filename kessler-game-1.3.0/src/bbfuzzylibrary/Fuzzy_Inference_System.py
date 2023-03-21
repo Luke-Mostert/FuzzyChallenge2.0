@@ -33,7 +33,7 @@ class FuzzyInferenceSystem:
                 if self.variables[a].name == list(inputs)[b]:
                     # Check that the x value is in the range of the variable
                     if self.variables[a].xMin > list(inputs.values())[b] or self.variables[a].xMax < list(inputs.values())[b]:
-                        print("This value is out of range")
+                        #print("This value is out of range")
                         return -999999999
         #Loop for each rule
         for m in range(len(inputs)):

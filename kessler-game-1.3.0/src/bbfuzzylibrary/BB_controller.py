@@ -8,9 +8,10 @@ from typing import Dict, Tuple
 from bbfuzzylibrary import Fuzzy_Create_FIS, Training, Fuzzy_Rules
 import math
 import numpy as np
+from bbfuzzylibrary import Training
 
-asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules.txt")
-actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules.txt")
+asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules3000.txt")
+actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules3000.txt")
 
 class BBController(KesslerController):
 
@@ -21,10 +22,7 @@ class BBController(KesslerController):
         thrust = 0
         retDict = self.DecideAction(ship_state, game_state)
         #print(retDict)
-        oVector = Training.OutputVector([asteroidFIS, actionFIS])
-        asteroidFIS.ruleset.UpdateOutput(oVector[0:27])
-        actionFIS.ruleset.UpdateOutput(oVector[27:32])
-        Fuzzy_Rules.FuzzyRuleExport("actionrules.txt", actionFIS.ruleset)
+        #oVector = Training.OutputVector([asteroidFIS, actionFIS])
 
         if retDict["action"] == 0:
             thrust = 0
@@ -225,8 +223,7 @@ class BBController(KesslerController):
             "turn_rate": 0,
             "thrust": 0
         }
-#highestAvoidThreat > 0.5
-        if highestAvoidThreat > 0.5:
+        if highestAvoidThreat > 0.6:
             turn_rate, targetRot, thrust = self.Avoidance(ship_state, highestAvoid)
             retDict["action"] = 1
             retDict["targetRot"] = targetRot

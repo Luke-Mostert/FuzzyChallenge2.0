@@ -1,10 +1,11 @@
+import Fuzzy_Create_FIS
 import Fuzzy_Inference_System
 from Fuzzy_Inference_System import Fuzzy_Rule_Set
 from Fuzzy_Rule_Set import Fuzzy_Rules
 from Fuzzy_Inference_System import Fuzzy_Variables
 from Fuzzy_Variables import Fuzzy_Set
 
-
+curFis = 0
 
 def CreateAsteroidFIS(filename):
     rules = Fuzzy_Rules.ImportFile(filename)
@@ -51,7 +52,7 @@ def CreateActionFIS(filename):
     threatHighSet = Fuzzy_Set.Trapezoid("high", 0.8, 0.85, 1, 1)
     ThreatLowSet = Fuzzy_Set.Trapezoid("low", 0, 0, 0.8, 0.85)
 
-    positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 800,
+    positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 1000,
                                                  [positionFarSet, positionCloseSet])
     threatVar = Fuzzy_Variables.FuzzyVariables("threat", 0, 1,
                                                  [threatHighSet, ThreatLowSet])

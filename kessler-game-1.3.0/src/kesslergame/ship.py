@@ -192,9 +192,10 @@ class Ship:
             spawn_heading = self.heading
             self.respawn(spawn_position, spawn_heading)
         else:
-            if self.team == 1:
-                Training.reward -= 100
-                print(Training.reward)
+            if self.team == 1 and Training.iteration == 0:
+                Training.reward -= 50
+            elif self.team == 1 and Training.iteration == 1:
+                Training.newReward -= 50
 
 
     def respawn(self, position: List[float], heading: float = 90.0) -> None:

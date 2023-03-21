@@ -1,0 +1,4 @@
+If position is far and threat is high then 0.4745999999999997
+If position is far and threat is low then 0.041499999999999995
+If position is close and threat is high then 0.9471
+If position is close and threat is low then 0.5226000000000001

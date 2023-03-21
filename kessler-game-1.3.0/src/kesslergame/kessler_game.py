@@ -54,6 +54,8 @@ class KesslerGame:
         Run an entire scenario from start to finish and return score and stop reason
         """
         global reward
+        global newReward
+        global iteration
         ##################
         # INITIALIZATION #
         ##################
@@ -183,7 +185,10 @@ class KesslerGame:
                         if dist < (ship.radius + asteroid.radius):
                             # Ship destruct function. Add one to asteroids_hit
                             ship.asteroids_hit += 1
-                            Training.reward += 1
+                            if ship.team == 1 and Training.iteration == 0:
+                                Training.reward += 3
+                            elif ship.team == 1 and Training.iteration == 1:
+                                Training.newReward += 3
                             ship.destruct(map_size=scenario.map_size)
                             # Asteroid destruct function and mark for removal
                             asteroids.extend(asteroid.destruct(impactor=ship))
@@ -204,7 +209,10 @@ class KesslerGame:
                         # Increment hit values on ship that fired bullet then destruct bullet and mark for removal
                         bullet.owner.asteroids_hit += 1
                         bullet.owner.bullets_hit += 1
-                        Training.reward += 1
+                        if bullet.owner.team == 1 and Training.iteration == 0:
+                            Training.reward += 3
+                        elif bullet.owner.team == 1 and Training.iteration == 1:
+                            Training.newReward += 3
                         bullet.destruct()
                         bullet_remove_idxs.append(idx_bul)
                         # Asteroid destruct function and mark for removal
@@ -289,6 +297,9 @@ class KesslerGame:
 
         # Finalize score class before returning
         score.finalize(sim_time, stop_reason)
+
+       #print("Reward 1 " + str(Training.reward))
+       #print("Reward 2 " + str(Training.newReward))
 
         # Return the score and stop condition
         return score, perf_dict
