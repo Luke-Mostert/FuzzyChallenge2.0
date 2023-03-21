@@ -13,7 +13,7 @@ class FuzzyRuleSet:
     def UpdateOutput(self, newOutput):
         for i in range(len(self.rules)):
             self.rules[i].output = newOutput[i]
-            self.rules[i].rule = re.sub("\d+\.\d+", str(newOutput[i]), self.rules[i].rule)
+            self.rules[i].rule = re.sub("[+-]?\d+\.\d+", str(newOutput[i]), self.rules[i].rule)
 
 
     def PrintRules(self):

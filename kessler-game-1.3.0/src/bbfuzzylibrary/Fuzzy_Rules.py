@@ -1,7 +1,7 @@
 import random
 
 import numpy as np
-
+import re
 
 class FuzzyRules:
     def __init__(self, rule):
@@ -57,8 +57,9 @@ def ImportFile(filename):
 
 
 def FuzzyRuleExport(filename, ruleset):
-    with open("D:/learning results/3400-4900/" + filename, 'w') as f:
+    with open("D:/learning results/3400-4500/" + filename, 'w') as f:
         for i in range(len(ruleset.rules)):
+            ruleset.rules[i].rule = re.sub("then \-([\-]+)", "then -", ruleset.rules[i].rule)
             f.writelines(ruleset.rules[i].rule + '\n')
 
 

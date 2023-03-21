@@ -30,9 +30,9 @@ game_settings = {'perf_tracker': True,
                  'realtime_multiplier': 5}
 game = KesslerGame(settings=game_settings)  # Use this to visualize the game scenario
 #game = TrainerEnvironment()  # Use this for training settings
-game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
+#game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
 
-for x in range(1501):
+for x in range(1):
     pre = time.perf_counter()
     score, perf_data = game.run(scenario=my_test_scenario, controllers = [BBController(), BBController2()])
     Training.iteration += 1
@@ -63,12 +63,12 @@ for x in range(1501):
     #print("nVec" + str(newVec))
     #print(Training.reward)
     #print(Training.newReward)
-    if x % 100 == 0:
+    if x % 50 == 0:
         print("EPOCH: " + str(x))
         print(str(Training.reward))
         print(str(Training.newReward))
-        Fuzzy_Rules.FuzzyRuleExport("actionrules" + str(x) + ".txt", actionFIS.ruleset)
-        Fuzzy_Rules.FuzzyRuleExport("asteroidrules" + str(x) + ".txt", asteroidFIS.ruleset)
+        Fuzzy_Rules.FuzzyRuleExport("actionrules2" + str(x) + ".txt", actionFIS.ruleset)
+        Fuzzy_Rules.FuzzyRuleExport("asteroidrules2" + str(x) + ".txt", asteroidFIS.ruleset)
 
     Training.iteration = 0
     Training.reward = 0
