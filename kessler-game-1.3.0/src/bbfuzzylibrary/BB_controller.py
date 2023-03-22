@@ -10,8 +10,8 @@ import math
 import numpy as np
 from bbfuzzylibrary import Training
 
-asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules4500.txt")
-actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules4500.txt")
+asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules4800.txt")
+actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules4800.txt")
 
 class BBController(KesslerController):
 
@@ -22,7 +22,7 @@ class BBController(KesslerController):
         thrust = 0
         retDict = self.DecideAction(ship_state, game_state)
         #print(retDict)
-        #oVector = Training.OutputVector([asteroidFIS, actionFIS])
+        #oVector = Training.OutputVector([asteroidFIS, actionFIS])[
         if retDict["action"] == 0:
             thrust = 0
             if math.isclose(retDict["targetRot"], ship_state['heading'], abs_tol=3):

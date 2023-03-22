@@ -8,6 +8,8 @@ from Fuzzy_Variables import Fuzzy_Set
 
 reward = 0
 newReward = 0
+reward2 = 0
+newReward2 = 0
 iteration = 0
 
 
@@ -34,5 +36,6 @@ def CalculateNewParams(oldVec, uVec):
     for x in range(31):
         #0.0005
         #0.00001
-        tempVec[x] = oldVec[x] + ((0.001 * ( newReward - reward)) * uVec[x])
+        #0.001 works
+        tempVec[x] = oldVec[x] + ((0.002 * ( newReward - reward)) * uVec[x])
     return tempVec

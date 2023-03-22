@@ -185,10 +185,16 @@ class KesslerGame:
                         if dist < (ship.radius + asteroid.radius):
                             # Ship destruct function. Add one to asteroids_hit
                             ship.asteroids_hit += 1
-                            if ship.team == 1 and Training.iteration == 0:
-                                Training.reward += 3
-                            elif ship.team == 1 and Training.iteration == 1:
-                                Training.newReward += 3
+                            if Training.iteration == 0:
+                                if ship.team == 1:
+                                    Training.reward += 3
+                                elif ship.team == 2:
+                                    Training.reward2 += 3
+                            elif Training.iteration == 1:
+                                if ship.team == 1:
+                                    Training.newReward += 3
+                                elif ship.team == 2:
+                                    Training.newReward2 += 3
                             ship.destruct(map_size=scenario.map_size)
                             # Asteroid destruct function and mark for removal
                             asteroids.extend(asteroid.destruct(impactor=ship))
@@ -209,10 +215,16 @@ class KesslerGame:
                         # Increment hit values on ship that fired bullet then destruct bullet and mark for removal
                         bullet.owner.asteroids_hit += 1
                         bullet.owner.bullets_hit += 1
-                        if bullet.owner.team == 1 and Training.iteration == 0:
-                            Training.reward += 3
-                        elif bullet.owner.team == 1 and Training.iteration == 1:
-                            Training.newReward += 3
+                        if Training.iteration == 0:
+                            if bullet.owner.team == 1:
+                                Training.reward += 3
+                            elif bullet.owner.team == 2:
+                                Training.reward2 += 3
+                        elif Training.iteration == 1:
+                            if bullet.owner.team == 1:
+                                Training.newReward += 3
+                            elif bullet.owner.team == 2:
+                                Training.newReward2 += 3
                         bullet.destruct()
                         bullet_remove_idxs.append(idx_bul)
                         # Asteroid destruct function and mark for removal

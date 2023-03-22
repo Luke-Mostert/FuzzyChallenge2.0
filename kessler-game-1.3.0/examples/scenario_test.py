@@ -9,7 +9,7 @@ import BB_controller
 from kesslergame import Scenario, KesslerGame, GraphicsType, TrainerEnvironment
 from test_controller import TestController
 from bbfuzzylibrary.BB_controller import BBController, actionFIS, asteroidFIS
-from bbfuzzylibrary.BB_controller2 import BBController2
+from bbfuzzylibrary.BB_controller2 import BBController2, actionFIS2, asteroidFIS2
 from bbfuzzylibrary import Training
 from bbfuzzylibrary import Fuzzy_Rules
 
@@ -29,10 +29,9 @@ game_settings = {'perf_tracker': True,
                  'graphics_mode': GraphicsType.Tkinter,
                  'realtime_multiplier': 5}
 game = KesslerGame(settings=game_settings)  # Use this to visualize the game scenario
-#game = TrainerEnvironment()  # Use this for training settings
 #game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
 
-for x in range(1):
+for x in range(1501):
     pre = time.perf_counter()
     score, perf_data = game.run(scenario=my_test_scenario, controllers = [BBController(), BBController2()])
     Training.iteration += 1
@@ -51,28 +50,43 @@ for x in range(1):
     pre = time.perf_counter()
     score, perf_data = game.run(scenario=my_test_scenario, controllers = [BBController(), BBController2()])
     #print(thetaVector)
+    if Training.reward < Training.reward2:
+        Training.reward -= 15
+    elif Training.reward > Training.reward2:
+        Training.reward += 15
+    if Training.newReward < Training.newReward2:
+        Training.newReward -= 15
+    elif Training.newReward > Training.newReward2:
+        Training.newReward += 15
+
     newVec = Training.CalculateNewParams(thetaVector, uVec)
 
     asteroidFIS.ruleset.UpdateOutput(newVec[0:27])
     actionFIS.ruleset.UpdateOutput(newVec[27:32])
-
-    temp = Training.OutputVector([asteroidFIS, actionFIS])
 
     #print("oVec" + str(thetaVector))
     #print("tVec" + str(temp))
     #print("nVec" + str(newVec))
     #print(Training.reward)
     #print(Training.newReward)
+    if x % 500 == 0:
+        asteroidFIS2.ruleset.UpdateOutput(newVec[0:27])
+        actionFIS2.ruleset.UpdateOutput(newVec[27:32])
     if x % 50 == 0:
         print("EPOCH: " + str(x))
         print(str(Training.reward))
         print(str(Training.newReward))
-        Fuzzy_Rules.FuzzyRuleExport("actionrules2" + str(x) + ".txt", actionFIS.ruleset)
-        Fuzzy_Rules.FuzzyRuleExport("asteroidrules2" + str(x) + ".txt", asteroidFIS.ruleset)
+        print("second agent")
+        print(str(Training.reward2))
+        print(str(Training.newReward2))
+        Fuzzy_Rules.FuzzyRuleExport("actionrules" + str(x) + ".txt", actionFIS.ruleset)
+        Fuzzy_Rules.FuzzyRuleExport("asteroidrules" + str(x) + ".txt", asteroidFIS.ruleset)
 
     Training.iteration = 0
     Training.reward = 0
     Training.newReward = 0
+    Training.reward2 = 0
+    Training.newReward2 = 0
 
 
 #print('Scenario eval time: '+str(time.perf_counter()-pre))

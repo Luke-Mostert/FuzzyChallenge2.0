@@ -10,8 +10,8 @@ import math
 import numpy as np
 from bbfuzzylibrary import Training
 
-asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules3000.txt")
-actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules3000.txt")
+asteroidFIS2 = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules3000.txt")
+actionFIS2 = Fuzzy_Create_FIS.CreateActionFIS("actionrules3000.txt")
 
 class BBController2(KesslerController):
 
@@ -127,7 +127,7 @@ class BBController2(KesslerController):
         asteroidDict["position"] = dist
         #need to find angle somehow shipcoords - asteroidcoords
         asteroidDict["angle"] = math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi)
-        threat = asteroidFIS.TSKEval(asteroidDict)
+        threat = asteroidFIS2.TSKEval(asteroidDict)
         if asteroid['size'] == 4:
             threat += .1
         elif asteroid['size'] == 3:
@@ -208,7 +208,7 @@ class BBController2(KesslerController):
             actionDict["position"] = dist
             actionDict["threat"] = threat
 
-            avoidThreat = actionFIS.TSKEval(actionDict)
+            avoidThreat = actionFIS2.TSKEval(actionDict)
             if avoidThreat > highestAvoidThreat:
                 highestAvoid = asteroid
                 highestAvoidThreat = avoidThreat
