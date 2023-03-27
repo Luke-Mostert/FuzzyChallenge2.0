@@ -57,7 +57,7 @@ def ImportFile(filename):
 
 
 def FuzzyRuleExport(filename, ruleset):
-    with open("D:/learning results/4800-6300/" + filename, 'w') as f:
+    with open("D:\learning results" + filename, 'w') as f:
         for i in range(len(ruleset.rules)):
             ruleset.rules[i].rule = re.sub("then \-([\-]+)", "then -", ruleset.rules[i].rule)
             f.writelines(ruleset.rules[i].rule + '\n')

@@ -194,14 +194,14 @@ class Ship:
         else:
             if Training.iteration == 0:
                 if self.team == 1:
-                    Training.reward -= 50
+                    Training.reward -= 30
                 elif self.team == 2:
-                    Training.reward2 -= 50
+                    Training.reward2 -= 30
             if Training.iteration == 1:
                 if self.team == 1:
-                    Training.newReward -= 50
+                    Training.newReward -= 30
                 elif self.team == 2:
-                    Training.newReward2 -= 50
+                    Training.newReward2 -= 30
 
 
     def respawn(self, position: List[float], heading: float = 90.0) -> None:

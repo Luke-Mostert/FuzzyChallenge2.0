@@ -325,11 +325,11 @@ class TrainerEnvironment(KesslerGame):
         if settings is None:
             settings = {}
         trainer_settings = {
-            'frequency': settings.get("frequency", 100.0),
+            'frequency': settings.get("frequency", 30.0),
             'perf_tracker': settings.get("perf_tracker", False),
             'prints_on': settings.get("prints_on", False),
             'graphics_type': GraphicsType.NoGraphics,
-            'realtime_multiplier': 5,
+            'realtime_multiplier': 0,
             'time_limit': settings.get("time_limit", 10)
         }
         super().__init__(trainer_settings)

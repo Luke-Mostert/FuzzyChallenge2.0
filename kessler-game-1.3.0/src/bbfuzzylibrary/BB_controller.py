@@ -10,8 +10,8 @@ import math
 import numpy as np
 from bbfuzzylibrary import Training
 
-asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules4800.txt")
-actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrules4800.txt")
+asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrulesA.txt")
+actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrulesA.txt")
 
 class BBController(KesslerController):
 
@@ -126,15 +126,24 @@ class BBController(KesslerController):
         asteroidDict["position"] = dist
         #need to find angle somehow shipcoords - asteroidcoords
         asteroidDict["angle"] = math.acos(np.dot(asteroid['velocity'], coords)/(speed * magcoords)) * (180/math.pi)
-        threat = asteroidFIS.TSKEval(asteroidDict)
+        threat = 0
         if asteroid['size'] == 4:
-            threat += .1
-        elif asteroid['size'] == 3:
             threat += .075
-        elif asteroid['size'] == 2:
+            if asteroidDict["angle"] > 10:
+                asteroidDict["angle"] -= 5
+        elif asteroid['size'] == 3:
             threat += .05
-        else:
+            if asteroidDict["angle"] > 10:
+                asteroidDict["angle"] -= 3
+        elif asteroid['size'] == 2:
             threat += .025
+            if asteroidDict["angle"] > 10:
+                asteroidDict["angle"] -= 2
+        else:
+            threat += .0125
+            if asteroidDict["angle"] > 10:
+                asteroidDict["angle"] -= 1
+        threat += asteroidFIS.TSKEval(asteroidDict)
         return threat
 
     def Avoidance(self, ship, asteroid):
@@ -173,7 +182,7 @@ class BBController(KesslerController):
         #print(str(asteroid["position"]) + " VEL " + str(asteroid["velocity"]) + " PERP " + str((perpVecX, perpVecY)))
 
         turn_rate, targetRot = self.FindRotation(ship, (perpVecX, perpVecY))
-        return turn_rate, targetRot, 120
+        return turn_rate, targetRot, 140
 
     def Shooting(self, ship, asteroid):
         turn_rate, targetRot = self.FindShootingRotation(ship, asteroid)

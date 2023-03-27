@@ -37,5 +37,5 @@ def CalculateNewParams(oldVec, uVec):
         #0.0005
         #0.00001
         #0.001 works
-        tempVec[x] = oldVec[x] + ((0.002 * ( newReward - reward)) * uVec[x])
+        tempVec[x] = oldVec[x] + ((0.001 * ( newReward - reward)) * uVec[x])
     return tempVec

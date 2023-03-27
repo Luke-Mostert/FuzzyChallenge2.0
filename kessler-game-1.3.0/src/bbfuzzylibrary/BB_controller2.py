@@ -10,8 +10,8 @@ import math
 import numpy as np
 from bbfuzzylibrary import Training
 
-asteroidFIS2 = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules3000.txt")
-actionFIS2 = Fuzzy_Create_FIS.CreateActionFIS("actionrules3000.txt")
+asteroidFIS2 = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrules2200.txt")
+actionFIS2 = Fuzzy_Create_FIS.CreateActionFIS("actionrules2400.txt")
 
 class BBController2(KesslerController):
 

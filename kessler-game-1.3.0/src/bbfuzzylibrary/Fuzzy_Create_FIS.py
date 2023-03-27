@@ -20,9 +20,12 @@ def CreateAsteroidFIS(filename):
     speedSlowSet = Fuzzy_Set.Trapezoid("slow", 0, 0, 120, 142.5)
 
     # position
-    positionFarSet = Fuzzy_Set.Trapezoid("far", 200, 300, 800, 800)
-    positionMidrangeSet = Fuzzy_Set.Triangle("midrange", 100, 200, 300)
-    positionCloseSet = Fuzzy_Set.Trapezoid("close", 0, 0, 100, 200)
+    #200 300 800 800
+    positionFarSet = Fuzzy_Set.Trapezoid("far", 300, 400, 1000, 1000)
+    #100 200 300
+    positionMidrangeSet = Fuzzy_Set.Triangle("midrange", 200, 300, 400)
+    #0 0 100 200
+    positionCloseSet = Fuzzy_Set.Trapezoid("close", 0, 0, 200, 300)
 
     # angle
     # Why 181 not 180
@@ -31,9 +34,9 @@ def CreateAsteroidFIS(filename):
     angleSmallSet = Fuzzy_Set.Trapezoid("small", 0, 0, 22.5, 30)
 
     speedVar = Fuzzy_Variables.FuzzyVariables("speed", 0, 165, [speedFastSet, speedIntermediateSet, speedSlowSet])
-    positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 800,
+    positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 1000,
                                                  [positionFarSet, positionMidrangeSet, positionCloseSet])
-    angleVar = Fuzzy_Variables.FuzzyVariables("angle", 0, 180, [angleLargeSet, angleMediumSet, angleSmallSet])
+    angleVar = Fuzzy_Variables.FuzzyVariables("angle", 0, 181, [angleLargeSet, angleMediumSet, angleSmallSet])
 
     asteroid_fis = Fuzzy_Inference_System.FuzzyInferenceSystem(asteroid_ruleset,
                                                                [speedVar, positionVar, angleVar])
@@ -49,12 +52,12 @@ def CreateActionFIS(filename):
     positionCloseSet = Fuzzy_Set.Trapezoid("close", 0, 0, 100, 200)
 
     #threat
-    threatHighSet = Fuzzy_Set.Trapezoid("high", 0.8, 0.85, 1, 1)
-    ThreatLowSet = Fuzzy_Set.Trapezoid("low", 0, 0, 0.8, 0.85)
+    threatHighSet = Fuzzy_Set.Trapezoid("high", 0.8, 0.85, 10, 10)
+    ThreatLowSet = Fuzzy_Set.Trapezoid("low", -10, -10, 0.8, 0.85)
 
     positionVar = Fuzzy_Variables.FuzzyVariables("position", 0, 1000,
                                                  [positionFarSet, positionCloseSet])
-    threatVar = Fuzzy_Variables.FuzzyVariables("threat", 0, 1,
+    threatVar = Fuzzy_Variables.FuzzyVariables("threat", -10, 10,
                                                  [threatHighSet, ThreatLowSet])
 
     action_fis = Fuzzy_Inference_System.FuzzyInferenceSystem(threat_ruleset,
