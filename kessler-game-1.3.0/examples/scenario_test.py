@@ -9,7 +9,7 @@ import BB_controller
 from kesslergame import Scenario, KesslerGame, GraphicsType, TrainerEnvironment
 from test_controller import TestController
 from bbfuzzylibrary.BB_controller import BBController, actionFIS, asteroidFIS
-from bbfuzzylibrary.BB_controller2 import BBController2, actionFIS2, asteroidFIS2
+from bbfuzzylibrary.Train_Against import BBController2, actionFIS2, asteroidFIS2
 from bbfuzzylibrary import Training
 from bbfuzzylibrary import Fuzzy_Rules
 
@@ -28,8 +28,8 @@ print("START")
 game_settings = {'perf_tracker': True,
                  'graphics_mode': GraphicsType.Tkinter,
                  'realtime_multiplier': 5}
-#game = KesslerGame(settings=game_settings)  # Use this to visualize the game scenario
-game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
+game = KesslerGame(settings=game_settings)  # Use this to visualize the game scenario
+#game = TrainerEnvironment(settings=game_settings)  # Use this for max-speed, no-graphics simulation
 
 for x in range(51):
     avgScoreFirst = 0

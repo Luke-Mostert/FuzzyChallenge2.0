@@ -10,11 +10,11 @@ import math
 import numpy as np
 from bbfuzzylibrary import Training
 
-asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrulesA.txt")
-actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrulesA.txt")
+asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrulesUSING.txt")
+actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrulesUSING.txt")
 
 class BBController(KesslerController):
-
+    global explain
     def actions(self, ship_state: Dict, game_state: Dict) -> Tuple[float, float, bool]:
         """
         Method processed each time step by this controller.
@@ -23,10 +23,12 @@ class BBController(KesslerController):
         retDict = self.DecideAction(ship_state, game_state)
         #print(retDict)
         #oVector = Training.OutputVector([asteroidFIS, actionFIS])[
+        print(retDict["explainString"])
         if retDict["action"] == 0:
             thrust = 0
             if math.isclose(retDict["targetRot"], ship_state['heading'], abs_tol=3):
                 fire = True
+
             else:
                 fire = False
         else:
@@ -229,18 +231,31 @@ class BBController(KesslerController):
             "action": 0,
             "targetRot": 0,
             "turn_rate": 0,
-            "thrust": 0
+            "thrust": 0,
+            "explainString": ""
         }
+        speed = math.sqrt(highestAvoid['velocity'][0] * highestAvoid['velocity'][0] + highestAvoid['velocity'][1] * highestAvoid['velocity'][1])
+        dist = self.FindDist(ship_state['position'], highestAvoid['position'])
+        avoiding = "avoiding"
+        shooting = "shooting at"
         if highestAvoidThreat > 0.6:
             turn_rate, targetRot, thrust = self.Avoidance(ship_state, highestAvoid)
             retDict["action"] = 1
             retDict["targetRot"] = targetRot
             retDict["turn_rate"] = turn_rate
             retDict["thrust"] = thrust
+            retDict["explainString"] = self.ExplainString(highestAvoid, speed, dist, avoiding, highestAvoidThreat)
         else:
             turn_rate, targetRot = self.Shooting(ship_state, highestAvoid)
             retDict["action"] = 0
             retDict["targetRot"] = targetRot
             retDict["turn_rate"] = turn_rate
+            retDict["explainString"] = self.ExplainString(highestAvoid, speed, dist, shooting, highestAvoidThreat)
 
         return retDict
+
+    def ExplainString(self, asteroid, speed, dist, action, threat):
+        explain = "I am " + action + " an asteroid that has a threat of " + str(round(threat,2)) + ", is " + str(
+            round(dist, 2)) + " units away from me, " + "has a speed of " + str(
+            round(speed, 2)) + ", and has a size of " + str(asteroid['size'])
+        return explain
