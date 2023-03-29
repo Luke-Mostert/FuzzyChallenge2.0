@@ -14,7 +14,6 @@ asteroidFIS = Fuzzy_Create_FIS.CreateAsteroidFIS("asteroidrulesUSING.txt")
 actionFIS = Fuzzy_Create_FIS.CreateActionFIS("actionrulesUSING.txt")
 
 class BBController(KesslerController):
-    global explain
     def actions(self, ship_state: Dict, game_state: Dict) -> Tuple[float, float, bool]:
         """
         Method processed each time step by this controller.
@@ -23,7 +22,7 @@ class BBController(KesslerController):
         retDict = self.DecideAction(ship_state, game_state)
         #print(retDict)
         #oVector = Training.OutputVector([asteroidFIS, actionFIS])[
-        print(retDict["explainString"])
+        #print(self.explanation())
         if retDict["action"] == 0:
             thrust = 0
             if math.isclose(retDict["targetRot"], ship_state['heading'], abs_tol=3):
@@ -244,18 +243,21 @@ class BBController(KesslerController):
             retDict["targetRot"] = targetRot
             retDict["turn_rate"] = turn_rate
             retDict["thrust"] = thrust
-            retDict["explainString"] = self.ExplainString(highestAvoid, speed, dist, avoiding, highestAvoidThreat)
+            self.ExplainString(highestAvoid, speed, dist, avoiding, highestAvoidThreat)
         else:
             turn_rate, targetRot = self.Shooting(ship_state, highestAvoid)
             retDict["action"] = 0
             retDict["targetRot"] = targetRot
             retDict["turn_rate"] = turn_rate
-            retDict["explainString"] = self.ExplainString(highestAvoid, speed, dist, shooting, highestAvoidThreat)
+            self.ExplainString(highestAvoid, speed, dist, shooting, highestAvoidThreat)
 
         return retDict
 
     def ExplainString(self, asteroid, speed, dist, action, threat):
+        global explain
         explain = "I am " + action + " an asteroid that has a threat of " + str(round(threat,2)) + ", is " + str(
             round(dist, 2)) + " units away from me, " + "has a speed of " + str(
             round(speed, 2)) + ", and has a size of " + str(asteroid['size'])
+
+    def explanation(self):
         return explain
